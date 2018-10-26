@@ -42,7 +42,7 @@ def check_arg(args=None):
                         type=float,
                         default=0.8
                         )
-    parser.add_argument('-o', '--outputdir',
+    parser.add_argument('-o', '--outdir',
                         help='Output directory name',
                         type=str,
                         default="Mich"
