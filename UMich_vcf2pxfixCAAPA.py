@@ -57,10 +57,11 @@ c = args.chr
 refpop = args.refpop
 mafthresh = args.maf
 r2thresh = args.rsq
-if args.outdir.endswith("/"):
-    out_dir = args.outdir
+out_dir = args.outdir
+if out_dir.endswith("/"):
+    out_dir = out_dir
 else:
-    out_dir = args.outdir + "/"
+    out_dir = out_dir + "/"
 
 chrfile = chrpath + "chr" + c + ".dose.vcf.gz"
 
