@@ -113,7 +113,7 @@ for line in gzip.open(chrfile):
         #split and join ids into FID and IID for PrediXcan
         ids2 = map(lambda x : x.split("_"), ids)
         ids = map(lambda x : ' '.join(x), ids2)
-        outsamples = open(chrpath + "Mich/samples.txt","w")
+        outsamples = open(out_dir + "samples.txt","w")
         outsamples.write("\n".join(ids))
         outsamples.close()
         continue
