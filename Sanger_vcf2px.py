@@ -32,13 +32,16 @@ def check_arg(args=None):
     parser.add_argument('-m', '--maf',
                         help='maf threshold, default 0.01',
                         type=float,
-                        default=0.01)
+                        default=0.01
+		       )
     parser.add_argument('--cpos', '--rsidtocpos',
                         help='outputs c:pos IDs instead of rsIDs, default is rsID',
                         action='store_true'
-    parser.add_argument('--matrix',
-                        help='outputs in matrixEQTL format instead of Predixcan, default is Predixcan')
-                        action='store_true'
+		       )
+    parser.add_argument('-info', '--info',
+                        help='IMPUTE2 INFO threshold, default 0.8',
+                        type=float,
+                        default=0.8
                         )
     return parser.parse_args(args)
 
