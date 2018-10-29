@@ -63,6 +63,8 @@ if out_dir.endswith("/"):
 else:
     out_dir = out_dir + "/"
 
+print(c)
+
 chrfile = chrpath + "chr" + c + ".dose.vcf.gz"
 
 ##make dictionary: keys->positions values->rsids
@@ -90,8 +92,8 @@ elif(refpop == 'cappa'):
         if(line.startswith('CHROM')):
             continue
         arr = line.strip().split()
-        (c,pos, rs, a0, a1) = arr[0:5]
-        cpos=str(c)+":"+pos
+        (chr,pos, rs, a0, a1) = arr[0:5]
+        cpos=str(chr)+":"+pos
         posdict[cpos] = rs
 else:
     print('need correct refpop:cappa, hrc, or 1000g')
@@ -101,7 +103,7 @@ else:
 # get dosage file data
 if(os.path.exists(out_dir) == False):
     os.mkdir(out_dir)
-
+print(c)
 outdosage = gzip.open(out_dir + "chr" + c + ".dosage.txt.gz","wb")
 for line in gzip.open(chrfile):
     if(line.startswith('##')):
@@ -110,6 +112,7 @@ for line in gzip.open(chrfile):
     #print(line)
     if(line.startswith('#CHROM')): #only one line should match #CHROM
         ids = arr[9:]
+        outdosage.write("chr snp_ID pos alt ref " + " ".join(ids) + '\n')
         #split and join ids into FID and IID for PrediXcan
         ids2 = map(lambda x : x.split("_"), ids)
         ids = map(lambda x : ' '.join(x), ids2)
