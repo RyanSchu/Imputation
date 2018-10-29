@@ -42,6 +42,11 @@ def check_arg(args=None):
                         type=float,
                         default=0.8
                         )
+    parser.add_argument('-o', '--outdir',
+                        help='Output directory name',
+                        type=str,
+                        default="Mich"
+                        )
     return parser.parse_args(args)
 
 #retrieve command line arguments
@@ -52,6 +57,11 @@ c = args.chr
 refpop = args.refpop
 mafthresh = args.maf
 r2thresh = args.rsq
+out_dir = args.outdir
+if out_dir.endswith("/"):
+    out_dir = out_dir
+else:
+    out_dir = out_dir + "/"
 
 chrfile = chrpath + "chr" + c + ".dose.vcf.gz"
 
@@ -89,10 +99,10 @@ else:
 #print(posdict)
 
 # get dosage file data
-if(os.path.exists(chrpath + 'Mich/') == False):
-    os.mkdir(chrpath + 'Mich/')
+if(os.path.exists(out_dir) == False):
+    os.mkdir(out_dir)
 
-outdosage = gzip.open(chrpath + "MKK_" + c + ".dosage.txt.gz","wb")
+outdosage = gzip.open(out_dir + "chr" + c + ".dosage.txt.gz","wb")
 for line in gzip.open(chrfile):
     if(line.startswith('##')):
             continue
@@ -103,7 +113,7 @@ for line in gzip.open(chrfile):
         #split and join ids into FID and IID for PrediXcan
         ids2 = map(lambda x : x.split("_"), ids)
         ids = map(lambda x : ' '.join(x), ids2)
-        outsamples = open(chrpath + "Mich/samples.txt","w")
+        outsamples = open(out_dir + "samples.txt","w")
         outsamples.write("\n".join(ids))
         outsamples.close()
         continue
