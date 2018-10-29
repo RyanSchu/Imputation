@@ -32,7 +32,12 @@ def check_arg(args=None):
     parser.add_argument('-m', '--maf',
                         help='maf threshold, default 0.01',
                         type=float,
-                        default=0.01)
+                        default=0.01
+		       )
+    parser.add_argument('--cpos', '--rsidtocpos',
+                        help='outputs c:pos IDs instead of rsIDs, default is rsID',
+                        action='store_true'
+		       )
     parser.add_argument('-info', '--info',
                         help='IMPUTE2 INFO threshold, default 0.8',
                         type=float,
@@ -47,6 +52,7 @@ chrpath = args.inputdir
 c = args.chr
 mafthresh = args.maf
 r2thresh = args.info
+cpos = args.cpos
 
 chrfile = chrpath + c + ".vcf.gz"
 
@@ -56,11 +62,12 @@ if(os.path.exists(chrpath + 'Sanger_dosages/') == False):
 
 outdosage = gzip.open(chrpath + "Sanger_dosages/chr" + c + ".maf" + str(mafthresh) + ".info" + str(r2thresh) + ".dosage.txt.gz","wb")
 for line in gzip.open(chrfile):
-    if(line.startswith('##')):
+    if(line.startswith('##')): #skip lines until field descriptors
         continue
     arr = line.strip().split()
     if(line.startswith('#CHROM')): #only one line should match #CHROM
         ids = arr[9:]
+	outdosage.write("chr snp_ID pos alt ref " + " ".join(ids) + '\n')
         #split and join ids into FID and IID for PrediXcan
         ids2 = map(lambda x : x.split("_"), ids)
         ids = map(lambda x : ' '.join(x), ids2)
@@ -83,7 +90,12 @@ for line in gzip.open(chrfile):
         minor = float(freqalt)
     else:
         minor = 1 - float(freqalt)
-    if(r2 > r2thresh and minor > mafthresh and re.search('rs',id) != None): #only pull SNPs with rsids and default: INFO>0.8, maf>0.01
+    if (cpos == True):
+        dosages = ' '.join(map(str,dosagerow))
+	id = chr + ':' + pos
+        output = 'chr' + chr + ' ' + id + ' ' + pos + ' ' + ref + ' ' + alt + ' ' + str(freqalt) + ' ' + dosages + '\n'
+        outdosage.write(output)
+    elif(r2 > r2thresh and minor > mafthresh and re.search('rs',id) != None): #only pull SNPs with rsids and default: INFO>0.8, maf>0.01
         dosages = ' '.join(map(str,dosagerow))
         output = 'chr' + chr + ' ' + id + ' ' + pos + ' ' + ref + ' ' + alt + ' ' + str(freqalt) + ' ' + dosages + '\n'
         outdosage.write(output)
