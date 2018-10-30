@@ -70,12 +70,12 @@ chrfile = chrpath + "chr" + c + ".dose.vcf.gz"
 ##make dictionary: keys->positions values->rsids
 posdict = {}
 if(refpop == 'hrc'):
-    snpfile = "/home/peter/AA_nonGAIN_SCZ/Imputation/ReferencePanel/chr" + c + "_HRC.r1-1.GRCh37.wgs.mac5.sites.tab.gz"
+    snpfile = "/home/wheelerlab3/Data/imputation_reference/hrc/chr" + c + "_HRC.r1-1.GRCh37.wgs.mac5.sites.tab.gz"
     for line in gzip.open(snpfile):
         arr = line.strip().split()
         posdict[arr[1]] = arr[2]
 elif(refpop == '1000g'):
-    snpfile = "/home/angela/1000GP_Phase3_combined/1000GP_Phase3_chr"+c+".legend.gz"
+    snpfile = "/home/wheelerlab3/Data/imputation_reference/1000g/1000GP_Phase3_chr"+c+".legend.gz"
     for line in gzip.open(snpfile):
         if(line.startswith('id')):
             continue
@@ -87,7 +87,7 @@ elif(refpop == '1000g'):
             posdict[cpos] = rs
             #print(rs)
 elif(refpop == 'cappa'):
-    snpfile = "/home/lauren/ref_impute/all.caapa.sorted.txt"
+    snpfile = "/home/wheelerlab3/Data/imputation_reference/caapa/all.caapa.sorted.txt"
     for line in open(snpfile):
         if(line.startswith('CHROM')):
             continue
