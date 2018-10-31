@@ -67,7 +67,7 @@ for line in gzip.open(chrfile):
     arr = line.strip().split()
     if(line.startswith('#CHROM')): #only one line should match #CHROM
         ids = arr[9:]
-	outdosage.write("chr snp_ID pos ref alt " + " ".join(ids) + '\n')
+	outdosage.write("chr snp_ID pos ref alt AA_freq " + " ".join(ids) + '\n')
         #split and join ids into FID and IID for PrediXcan
         ids2 = map(lambda x : x.split("_"), ids)
         ids = map(lambda x : ' '.join(x), ids2)
