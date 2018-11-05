@@ -43,6 +43,10 @@ def check_arg(args=None):
                         type=float,
                         default=0.8
                         )
+    parser.add_argument('-dict', '--printdict',
+                        help='print out map file made from dictionary',
+                        action='store_true'
+                        )
     return parser.parse_args(args)
 
 #retrieve command line arguments
@@ -53,13 +57,15 @@ c = args.chr
 mafthresh = args.maf
 r2thresh = args.info
 cpos = args.cpos
-
+dict = args.dict
 chrfile = chrpath + c + ".vcf.gz"
 
 # get dosage file data
 if(os.path.exists(chrpath + 'Sanger_dosages/') == False):
     os.mkdir(chrpath + 'Sanger_dosages/')
-
+if (dict == True):
+    mapfile=gzip.open(chrpath + "Sanger_dosages/cpos_rsid_map_chr" + i + ".txt.gz","wb")
+    mapfile.write("cpos\trsid\n")
 outdosage = gzip.open(chrpath + "Sanger_dosages/chr" + c + ".maf" + str(mafthresh) + ".info" + str(r2thresh) + ".dosage.txt.gz","wb")
 for line in gzip.open(chrfile):
     if(line.startswith('##')): #skip lines until field descriptors
@@ -76,6 +82,8 @@ for line in gzip.open(chrfile):
         outsamples.close()
         continue
     (chr, pos, id, ref, alt, qual, filter, info, format) = arr[0:9]
+    if(dict == True):
+        mapfile.write(c + ":" + pos + "\t" + id + "\n") 
     if(len(ref) > 1 or len(alt) > 1): #do not output indels, PrediXcan only allows SNPs
         continue
     if(re.search('TYPED',info) == None): #look for 'TYPED' to decide whether to split into 4 or 5
