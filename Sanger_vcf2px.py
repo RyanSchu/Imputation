@@ -43,7 +43,7 @@ def check_arg(args=None):
                         type=float,
                         default=0.8
                         )
-    parser.add_argument('-dict', '--printdict',
+    parser.add_argument('--dict', '--printdict',
                         help='print out map file made from dictionary',
                         action='store_true'
                         )
@@ -64,7 +64,7 @@ chrfile = chrpath + c + ".vcf.gz"
 if(os.path.exists(chrpath + 'Sanger_dosages/') == False):
     os.mkdir(chrpath + 'Sanger_dosages/')
 if (dict == True):
-    mapfile=gzip.open(chrpath + "Sanger_dosages/cpos_rsid_map_chr" + i + ".txt.gz","wb")
+    mapfile=gzip.open(chrpath + "Sanger_dosages/cpos_rsid_map_chr" + c + ".txt.gz","wb")
     mapfile.write("cpos\trsid\n")
 outdosage = gzip.open(chrpath + "Sanger_dosages/chr" + c + ".maf" + str(mafthresh) + ".info" + str(r2thresh) + ".dosage.txt.gz","wb")
 for line in gzip.open(chrfile):
