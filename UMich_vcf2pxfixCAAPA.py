@@ -134,6 +134,13 @@ for line in gzip.open(chrfile):
         impr2='0=0'
     r2 = float(impr2.split("=")[1]) #get r2 value as float
     minor = float(maf.split("=")[1]) #get maf as float
+    gt_dosagerow = arr[9:]
+    dosagerow = map(lambda x : float(x.split(":")[2]), gt_dosagerow) #lambda function to split each info entry and collect the dosage
+    freqalt = round(sum(dosagerow)/(len(dosagerow)*2),4) #calc ALT allele freq (I found that ALT is not always the minor allele)
+    if freqalt < 0.5:
+        minor = float(freqalt)
+    else:
+        minor = 1 - float(freqalt)
     #print(cpos)
     if cpos in posdict:
         rsid=posdict[cpos]
@@ -142,10 +149,6 @@ for line in gzip.open(chrfile):
         rsid = '.'
     #print(str(r2) + " " + str(minor) + " " + str(rsid))
     if(r2 > r2thresh and minor > mafthresh and re.search('rs',rsid) != None): #only pull SNPs with rsids and default: R2>0.8, maf>0.01
-        gt_dosagerow = arr[9:]
-        #see http://www.python-course.eu/lambda.php for details
-        dosagerow = map(lambda x : float(x.split(":")[1]), gt_dosagerow) #lambda function to split each info entry and collect the dosage
-        freqalt = round(sum(dosagerow)/(len(dosagerow)*2),4) #calc ALT allele freq (I found that ALT is not always the minor allele)
         dosages = ' '.join(map(str,dosagerow))
         output = c + ' ' + rsid + ' ' + pos + ' ' + ref + ' ' + alt + ' ' + str(freqalt) + ' ' + dosages + '\n'
         outdosage.write(output)
