@@ -135,7 +135,7 @@ for line in gzip.open(chrfile):
     r2 = float(impr2.split("=")[1]) #get r2 value as float
     minor = float(maf.split("=")[1]) #get maf as float
     gt_dosagerow = arr[9:]
-    dosagerow = map(lambda x : float(x.split(":")[2]), gt_dosagerow) #lambda function to split each info entry and collect the dosage
+    dosagerow = map(lambda x : float(x.split(":")[1]), gt_dosagerow) #lambda function to split each info entry and collect the dosage
     freqalt = round(sum(dosagerow)/(len(dosagerow)*2),4) #calc ALT allele freq (I found that ALT is not always the minor allele)
     if freqalt < 0.5:
         minor = float(freqalt)
