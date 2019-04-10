@@ -43,6 +43,10 @@ def check_arg(args=None):
                         type=float,
                         default=0.8
                         )
+    parser.add_argument('--dict', '--printdict',
+                        help='print out map file made from dictionary',
+                        action='store_true'
+                        )
     return parser.parse_args(args)
 
 #retrieve command line arguments
@@ -53,13 +57,15 @@ c = args.chr
 mafthresh = args.maf
 r2thresh = args.info
 cpos = args.cpos
-
+dict = args.dict
 chrfile = chrpath + c + ".vcf.gz"
 
 # get dosage file data
 if(os.path.exists(chrpath + 'Sanger_dosages/') == False):
     os.mkdir(chrpath + 'Sanger_dosages/')
-
+if (dict == True):
+    mapfile=gzip.open(chrpath + "Sanger_dosages/cpos_rsid_map_chr" + c + ".txt.gz","wb")
+    mapfile.write("cpos\trsid\n")
 outdosage = gzip.open(chrpath + "Sanger_dosages/chr" + c + ".maf" + str(mafthresh) + ".info" + str(r2thresh) + ".dosage.txt.gz","wb")
 for line in gzip.open(chrfile):
     if(line.startswith('##')): #skip lines until field descriptors
@@ -67,7 +73,7 @@ for line in gzip.open(chrfile):
     arr = line.strip().split()
     if(line.startswith('#CHROM')): #only one line should match #CHROM
         ids = arr[9:]
-	outdosage.write("chr snp_ID pos ref alt " + " ".join(ids) + '\n')
+	outdosage.write("chr snp_ID pos ref alt AA_freq " + " ".join(ids) + '\n')
         #split and join ids into FID and IID for PrediXcan
         ids2 = map(lambda x : x.split("_"), ids)
         ids = map(lambda x : ' '.join(x), ids2)
@@ -76,6 +82,8 @@ for line in gzip.open(chrfile):
         outsamples.close()
         continue
     (chr, pos, id, ref, alt, qual, filter, info, format) = arr[0:9]
+    if(dict == True):
+        mapfile.write(c + ":" + pos + "\t" + id + "\n") 
     if(len(ref) > 1 or len(alt) > 1): #do not output indels, PrediXcan only allows SNPs
         continue
     if(re.search('TYPED',info) == None): #look for 'TYPED' to decide whether to split into 4 or 5
@@ -90,7 +98,7 @@ for line in gzip.open(chrfile):
         minor = float(freqalt)
     else:
         minor = 1 - float(freqalt)
-    if (cpos == True):
+    if (cpos == True and r2 > r2thresh and minor > mafthresh):
         dosages = ' '.join(map(str,dosagerow))
 	id = chr + ':' + pos
         output = 'chr' + chr + ' ' + id + ' ' + pos + ' ' + ref + ' ' + alt + ' ' + str(freqalt) + ' ' + dosages + '\n'
