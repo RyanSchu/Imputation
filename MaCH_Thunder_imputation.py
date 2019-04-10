@@ -73,7 +73,7 @@ for line in gzip.open(args.input):
     if(len(ref) > 1 or len(alt) > 1): #do not output indels, PrediXcan only allows SNPs
         continue
     try:
-        rsqs = re.search('RSQ=0\.[0-9]*',info).group(1) #search for RSQ value
+        rsqs = re.search('RSQ=0\.[0-9]*',info).group(0) #search for RSQ value
     except AttributeError:
         continue
     r2 = float(rsqs.split("=")[1]) #get IMPUTE2 info score as float
