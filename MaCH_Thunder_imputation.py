@@ -86,7 +86,7 @@ for line in gzip.open(chrfile):
         minor = 1 - float(freqalt)
     if (cpos == True and r2 > r2thresh and minor > mafthresh):
         dosages = ' '.join(map(str,dosagerow))
-	      id = chr + ':' + pos
+	id = chr + ':' + pos
         output = 'chr' + chr + ' ' + id + ' ' + pos + ' ' + ref + ' ' + alt + ' ' + str(freqalt) + ' ' + dosages + '\n'
         outdosage.write(output)
     elif(r2 > r2thresh and minor > mafthresh): #only pull SNPs with rsids and default: INFO>0.8, maf>0.01
