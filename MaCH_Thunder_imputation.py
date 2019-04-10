@@ -52,7 +52,7 @@ if(os.path.exists(args.out) == False):
 if (dict == True):
     mapfile=gzip.open(args.out +"/cpos_rsid_map.txt.gz","wb")
     mapfile.write("cpos\trsid\n")
-outdosage = gzip.open(args.out + '/Mach.maf" + str(mafthresh) + ".R2" + str(r2thresh) + ".dosage.txt.gz","wb")
+outdosage = gzip.open(args.out + "/Mach.maf" + str(mafthresh) + ".R2" + str(r2thresh) + ".dosage.txt.gz","wb")
 for line in gzip.open(chrfile):
     if(line.startswith('##')): #skip lines until field descriptors
         continue
